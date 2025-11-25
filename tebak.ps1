@@ -1,5 +1,5 @@
-# tebak_angka.ps1
-# Game Tebak Angka Sederhana PowerShell
+# tebak_angka_fixed.ps1
+# Game Tebak Angka Sederhana PowerShell - FIXED
 
 function Start-TebakAngkaGame {
     [CmdletBinding()]
@@ -30,17 +30,25 @@ function Start-TebakAngkaGame {
         # Input validation
         do {
             $inputValid = $true
-            $tebakan = Read-Host "Masukkan tebakan Anda ($MinNumber-$MaxNumber)"
+            $inputTebakan = Read-Host "Masukkan tebakan Anda ($MinNumber-$MaxNumber)"
             
-            # Validasi input
-            if (-not ($tebakan -match '^\d+$')) {
+            # Validasi input kosong
+            if ([string]::IsNullOrWhiteSpace($inputTebakan)) {
+                Write-Host "❌ Input tidak boleh kosong!" -ForegroundColor Red
+                $inputValid = $false
+                continue
+            }
+            
+            # Validasi numeric
+            if (-not ($inputTebakan -match '^\d+$')) {
                 Write-Host "❌ Harap masukkan angka yang valid!" -ForegroundColor Red
                 $inputValid = $false
                 continue
             }
             
-            $tebakan = [int]$tebakan
+            $tebakan = [int]$inputTebakan
             
+            # Validasi range
             if ($tebakan -lt $MinNumber -or $tebakan -gt $MaxNumber) {
                 Write-Host "❌ Angka harus antara $MinNumber-$MaxNumber!" -ForegroundColor Red
                 $inputValid = $false
@@ -92,4 +100,6 @@ function Start-TebakAngkaGame {
 }
 
 # Jalankan game
+Write-Host "Memuat Game Tebak Angka..." -ForegroundColor Green
+Start-Sleep -Seconds 2
 Start-TebakAngkaGame
